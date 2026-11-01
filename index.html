@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><meta name="theme-color" content="#0067C0"><title>БурУчёт — учёт бурового инструмента</title><script>(function(){try{var t=localStorage.getItem('drill_bits_theme_v1');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}})();</script><link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪨</text></svg>">
+<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0067C0"><title>БурУчёт — учёт бурового инструмента</title><script>(function(){try{var t=localStorage.getItem('drill_bits_theme_v1');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}})();</script><link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪨</text></svg>">
 <style>:root{
   --bg:#F3F3F3;--sf:#FFFFFF;--sfa:#F9F9F9;--bd:#E5E5E5;--bd2:#D1D1D1;
   --tx:#1A1A1A;--mt:#616161;--pr:#0067C0;--prh:#005A9E;--prl:rgba(0,103,192,0.08);--pr-txt:#FFFFFF;
@@ -32,6 +32,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
+html{-webkit-text-size-adjust:100%}
 body{
   font-family:"Segoe UI Variable Display","Segoe UI Variable","Segoe UI",-apple-system,BlinkMacSystemFont,Roboto,Arial,sans-serif;
   background:
@@ -41,6 +42,8 @@ body{
   background-attachment:fixed;
   color:var(--tx);font-size:14px;line-height:1.5;
   -webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color:transparent;
+  overscroll-behavior-y:contain;
   transition:background-color .25s,color .25s;
   font-feature-settings:"ss01","cv11";
 }
@@ -51,7 +54,7 @@ body{
 ::-webkit-scrollbar-thumb:hover{background:rgba(127,127,127,0.65);background-clip:content-box;border:2px solid transparent}
 :focus-visible{outline:2px solid var(--tx);outline-offset:2px;border-radius:var(--rs)}
 
-.app{display:flex;height:100vh;overflow:hidden}
+.app{display:flex;height:100vh;height:100dvh;overflow:hidden}
 .sidebar{width:240px;flex-shrink:0;padding:12px 8px;display:flex;flex-direction:column;gap:2px;background:transparent;border-right:1px solid var(--bd);transition:border-color .25s;overflow-y:auto;}
 .logo{display:flex;align-items:center;gap:10px;padding:10px 12px 16px;margin-bottom:10px;font-weight:600;font-size:14px;letter-spacing:.2px;border-bottom:1px solid var(--bd);}
 .logo-icon{font-size:20px}
@@ -62,7 +65,7 @@ body{
 .nav-btn:hover{background:rgba(127,127,127,0.08)}
 .nav-btn.active{background:var(--prl);font-weight:500}
 .nav-btn.active::before{height:16px}
-.main{flex:1;padding:28px 36px;overflow-y:auto;overflow-x:hidden;max-width:calc(100% - 240px);min-width:0;height:100vh;}
+.main{flex:1;padding:28px 36px;overflow-y:auto;overflow-x:hidden;max-width:calc(100% - 240px);min-width:0;height:100vh;height:100dvh;}
 .page{display:none}
 .page.active{display:block}
 h1{font-size:26px;margin-bottom:4px;font-weight:600;letter-spacing:-.2px}
@@ -206,29 +209,130 @@ tbody tr:hover{background:var(--sfa)}
 .bak-info{flex:1;min-width:0}
 .bak-name{font-weight:600;font-size:13px;word-break:break-all}
 .bak-meta{font-size:11.5px;color:var(--mt);margin-top:2px}
+
+/* ===== Мобильная адаптация (iPhone 14+ и другие) ===== */
 @media(max-width:768px){
-  .app{flex-direction:column;height:auto;overflow:visible}
-  .sidebar{width:100%;flex-direction:row;padding:10px;overflow-x:auto;overflow-y:visible;gap:2px;border-right:none;border-bottom:1px solid var(--bd);background:var(--sf);height:auto;}
-  .logo{padding:0 12px 0 6px;border:none;margin:0;white-space:nowrap}
+  html,body{height:auto;min-height:100dvh;-webkit-text-size-adjust:100%;overscroll-behavior-y:contain}
+  .app{flex-direction:column;min-height:100dvh;height:auto;overflow:visible}
+
+  /* Sticky-навигация с safe-area сверху */
+  .sidebar{
+    width:100%;flex-direction:row;align-items:center;
+    padding:calc(env(safe-area-inset-top,0px) + 8px) 8px 8px;
+    padding-left:max(8px,env(safe-area-inset-left,0px));
+    padding-right:max(8px,env(safe-area-inset-right,0px));
+    overflow-x:auto;overflow-y:visible;-webkit-overflow-scrolling:touch;
+    scrollbar-width:none;gap:2px;border-right:none;border-bottom:1px solid var(--bd);
+    background:var(--sf);height:auto;
+    position:sticky;top:0;z-index:50;flex-wrap:nowrap;
+  }
+  .sidebar::-webkit-scrollbar{display:none}
+  .logo{padding:0 10px 0 4px;border:none;margin:0;white-space:nowrap;flex-shrink:0}
   .logo span:last-child{display:none}
-  .nav-btn{padding:8px 10px;white-space:nowrap}
+  .nav-btn{padding:10px 12px;min-height:44px;white-space:nowrap;flex-shrink:0;font-size:14px}
   .nav-btn::before{display:none}
-  .theme-toggle{margin-top:0}
+  .theme-toggle{margin-top:0;min-width:44px;justify-content:center;padding:10px;flex-shrink:0}
   .theme-toggle .theme-label{display:none}
-  .nav-btn.about-link{padding:8px 10px}
+  .nav-btn.about-link{padding:10px;min-width:44px;flex-shrink:0}
   .nav-btn.about-link .about-label{display:none}
-  .main{padding:16px;max-width:100%;height:auto;overflow:visible}
+
+  /* Основной контент с safe-area */
+  .main{
+    padding:16px;
+    padding-left:max(16px,env(safe-area-inset-left,0px));
+    padding-right:max(16px,env(safe-area-inset-right,0px));
+    padding-bottom:calc(env(safe-area-inset-bottom,0px) + 60px);
+    max-width:100%;height:auto;overflow:visible;-webkit-overflow-scrolling:touch;
+  }
   .form-row{grid-template-columns:1fr}
   h1{font-size:22px}
-  .about-grid{grid-template-columns:1fr;gap:2px 0}
-  .about-grid .k{margin-top:6px}
-  .clock-widget{margin-top:0;padding:6px 9px;font-size:11px;gap:4px;flex-shrink:0;}
+  .subtitle{font-size:13px}
+
+  /* Инпуты 16px — против авто-зума в iOS Safari */
+  input[type=text],input[type=date],input[type=month],input[type=number],select,textarea{
+    font-size:16px;padding:11px 12px;min-height:44px;
+  }
+  input[type=text],input[type=number],select,textarea{-webkit-appearance:none;appearance:none}
+  input:focus,select:focus,textarea:focus{font-size:16px;padding-bottom:10px}
+  textarea{min-height:80px}
+
+  /* Крупные тач-таргеты (HIG ≥44px) */
+  .btn{min-height:44px;padding:10px 18px;font-size:14px;-webkit-tap-highlight-color:transparent}
+  .btn-sm{min-height:38px;padding:6px 12px;font-size:13px}
+  .btn-icon{min-width:38px;min-height:38px;justify-content:center}
+  .tab-btn{min-height:40px;padding:8px 14px}
+  .sort-btn{min-height:40px;padding:6px 14px}
+
+  /* 2 колонки на дашборде */
+  .grid-4{grid-template-columns:repeat(2,1fr);gap:12px}
+  .stat-card{padding:14px}
+  .stat-value{font-size:22px}
+  .stat-value.small{font-size:18px}
+
+  /* Фильтры в столбик */
+  .filters{gap:10px}
+  .filters .field{min-width:0;flex:1 1 100%}
+
+  /* Таблицы: горизонтальный скролл */
+  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  th,td{padding:10px 12px;font-size:13px}
+
+  /* Модалка → bottom-sheet */
+  .modal-overlay{padding:0;align-items:flex-end}
+  .modal{
+    max-width:100%;width:100%;max-height:92dvh;
+    border-radius:16px 16px 0 0;padding:20px 16px;
+    padding-bottom:calc(env(safe-area-inset-bottom,0px) + 20px);
+    overflow-y:auto;-webkit-overflow-scrolling:touch;
+    animation:sheetUp .28s cubic-bezier(.32,.72,0,1);
+  }
+  @keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+  .modal > h3:first-child{
+    margin:-20px -16px 16px;padding:20px 16px 12px;
+    border-bottom:1px solid var(--bd);
+    background:var(--sf);
+    position:sticky;top:0;z-index:1;
+  }
+  .modal::before{
+    content:"";display:block;width:36px;height:4px;border-radius:2px;
+    background:var(--bd2);margin:-8px auto 12px;
+  }
+
+  /* Тосты над home indicator */
+  .toast-container{bottom:calc(env(safe-area-inset-bottom,0px) + 16px);right:12px;left:12px}
+  .toast{min-width:0;max-width:100%}
+  .toast.greeting{min-width:0;max-width:100%}
+  .save-indicator{bottom:calc(env(safe-area-inset-bottom,0px) + 60px);left:50%;transform:translateX(-50%)}
+
+  /* Часы в sticky-хэдере */
+  .clock-widget{
+    margin-top:0;padding:8px 10px;font-size:11px;gap:4px;
+    flex-shrink:0;min-height:40px;user-select:none;pointer-events:none;
+  }
   .clock-widget .clock-icon,.clock-widget .clock-date{display:none}
   .clock-widget .clock-time{padding-left:0;margin-left:0;border-left:none}
-  .sidebar-footer{position:fixed;bottom:6px;right:6px;margin:0;padding:3px 9px;background:var(--sf);border:1px solid var(--bd);border-radius:999px;font-size:10px;z-index:40;box-shadow:var(--sh);}
-  .sidebar-footer b{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(100vw - 32px)}
+
+  /* Копирайт-пилюля в правом нижнем углу */
+  .sidebar-footer{
+    position:fixed;
+    bottom:calc(env(safe-area-inset-bottom,0px) + 6px);
+    right:max(6px,env(safe-area-inset-right,0px));
+    margin:0;padding:4px 10px;
+    background:var(--sf);border:1px solid var(--bd);border-radius:999px;
+    font-size:10px;z-index:40;box-shadow:var(--sh);
+  }
+  .sidebar-footer b{
+    font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    max-width:calc(100vw - 32px);display:inline;
+  }
   .sidebar-footer span{display:none}
-  .toast.greeting{min-width:260px;max-width:calc(100vw - 32px)}
+
+  /* О программе */
+  .about-grid{grid-template-columns:1fr;gap:2px 0}
+  .about-grid .k{margin-top:6px}
+  .about-head{gap:12px}
+  .about-logo{width:48px;height:48px;font-size:28px}
+  .about-title{font-size:16px}
 }</style></head><body>
 <div class="app"><aside class="sidebar"><div class="logo"><span class="logo-icon">🪨</span><span>БурУчёт</span></div><button class="nav-btn active" data-page="dashboard">📊 Обзор</button><button class="nav-btn" data-page="issue">➕ Выдача</button><button class="nav-btn" data-page="journal">📋 Журнал</button><button class="nav-btn" data-page="warehouse">📦 Склад <span class="beta-badge">beta</span></button><button class="nav-btn" data-page="export">⚙️ Настройки</button><div class="clock-widget" id="clock-widget" aria-live="off"><span class="clock-icon">🕐</span><span class="clock-date" id="clock-date"></span><span class="clock-time" id="clock-time"></span></div><button class="nav-btn theme-toggle" id="theme-toggle"></button><button class="nav-btn about-link" data-page="about"><span>ℹ️</span><span class="about-label">О программе</span></button><div class="sidebar-footer"><b>© 2026 Евгений Никитин Игоревич</b><span>Все права защищены</span></div></aside><main class="main">
 <div class="page active" id="page-dashboard"><h1>Обзор</h1><p class="subtitle">Сводная информация по выдаче и наработке</p><div class="grid grid-4" id="dashboard-stats"></div><div class="grid grid-4" id="dashboard-breakdown" style="margin-top:16px;"></div><div class="card" style="margin-top:16px;"><h2>Последние выдачи</h2><div id="recent-issues"></div></div></div>
@@ -518,7 +622,7 @@ function buildXlsx(sheets){
   const files=[];
   let ct='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
     +'<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
-    +'<Default Extension="xml" ContentType"application/xml"/>'
+    +'<Default Extension="xml" ContentType="application/xml"/>'
     +'<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>'
     +'<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>';
   sheets.forEach((_,i)=>{ct+=`<Override PartName="/xl/worksheets/sheet${i+1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`});
