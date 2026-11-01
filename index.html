@@ -35,17 +35,10 @@ html,body{height:100%}
 html{-webkit-text-size-adjust:100%}
 body{
   font-family:"Segoe UI Variable Display","Segoe UI Variable","Segoe UI",-apple-system,BlinkMacSystemFont,Roboto,Arial,sans-serif;
-  background:
-    radial-gradient(ellipse 80% 50% at 20% 0%,var(--mica1),transparent 60%),
-    radial-gradient(ellipse 60% 40% at 100% 100%,var(--mica2),transparent 60%),
-    var(--bg);
-  background-attachment:fixed;
-  color:var(--tx);font-size:14px;line-height:1.5;
-  -webkit-font-smoothing:antialiased;
-  -webkit-tap-highlight-color:transparent;
-  overscroll-behavior-y:contain;
-  transition:background-color .25s,color .25s;
-  font-feature-settings:"ss01","cv11";
+  background:radial-gradient(ellipse 80% 50% at 20% 0%,var(--mica1),transparent 60%),radial-gradient(ellipse 60% 40% at 100% 100%,var(--mica2),transparent 60%),var(--bg);
+  background-attachment:fixed;color:var(--tx);font-size:14px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;overscroll-behavior-y:contain;
+  transition:background-color .25s,color .25s;font-feature-settings:"ss01","cv11";
 }
 ::selection{background:var(--pr);color:var(--pr-txt)}
 ::-webkit-scrollbar{width:10px;height:10px}
@@ -53,7 +46,6 @@ body{
 ::-webkit-scrollbar-thumb{background:rgba(127,127,127,0.4);border-radius:5px;border:2px solid transparent;background-clip:content-box}
 ::-webkit-scrollbar-thumb:hover{background:rgba(127,127,127,0.65);background-clip:content-box;border:2px solid transparent}
 :focus-visible{outline:2px solid var(--tx);outline-offset:2px;border-radius:var(--rs)}
-
 .app{display:flex;height:100vh;height:100dvh;overflow:hidden}
 .sidebar{width:240px;flex-shrink:0;padding:12px 8px;display:flex;flex-direction:column;gap:2px;background:transparent;border-right:1px solid var(--bd);transition:border-color .25s;overflow-y:auto;}
 .logo{display:flex;align-items:center;gap:10px;padding:10px 12px 16px;margin-bottom:10px;font-weight:600;font-size:14px;letter-spacing:.2px;border-bottom:1px solid var(--bd);}
@@ -210,138 +202,272 @@ tbody tr:hover{background:var(--sfa)}
 .bak-name{font-weight:600;font-size:13px;word-break:break-all}
 .bak-meta{font-size:11.5px;color:var(--mt);margin-top:2px}
 
-/* ===== Мобильная адаптация (iPhone 14+ и другие) ===== */
+/* ===== Mobile UI elements (hidden on desktop) ===== */
+.mobile-header{display:none}
+.bottom-nav{display:none}
+.fab{display:none}
+.filters-toggle{display:none}
+body.modal-open{overflow:hidden}
+
+/* ===== MOBILE (iPhone 14+) ===== */
 @media(max-width:768px){
   html,body{height:auto;min-height:100dvh;-webkit-text-size-adjust:100%;overscroll-behavior-y:contain}
   .app{flex-direction:column;min-height:100dvh;height:auto;overflow:visible}
 
-  /* Sticky-навигация с safe-area сверху */
-  .sidebar{
-    width:100%;flex-direction:row;align-items:center;
-    padding:calc(env(safe-area-inset-top,0px) + 8px) 8px 8px;
-    padding-left:max(8px,env(safe-area-inset-left,0px));
-    padding-right:max(8px,env(safe-area-inset-right,0px));
-    overflow-x:auto;overflow-y:visible;-webkit-overflow-scrolling:touch;
-    scrollbar-width:none;gap:2px;border-right:none;border-bottom:1px solid var(--bd);
-    background:var(--sf);height:auto;
-    position:sticky;top:0;z-index:50;flex-wrap:nowrap;
-  }
-  .sidebar::-webkit-scrollbar{display:none}
-  .logo{padding:0 10px 0 4px;border:none;margin:0;white-space:nowrap;flex-shrink:0}
-  .logo span:last-child{display:none}
-  .nav-btn{padding:10px 12px;min-height:44px;white-space:nowrap;flex-shrink:0;font-size:14px}
-  .nav-btn::before{display:none}
-  .theme-toggle{margin-top:0;min-width:44px;justify-content:center;padding:10px;flex-shrink:0}
-  .theme-toggle .theme-label{display:none}
-  .nav-btn.about-link{padding:10px;min-width:44px;flex-shrink:0}
-  .nav-btn.about-link .about-label{display:none}
+  /* Hide desktop sidebar */
+  .sidebar{display:none}
 
-  /* Основной контент с safe-area */
-  .main{
-    padding:16px;
+  /* Mobile header */
+  .mobile-header{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    position:fixed;top:0;left:0;right:0;z-index:60;
+    padding:calc(env(safe-area-inset-top,0px) + 8px) 16px 8px;
     padding-left:max(16px,env(safe-area-inset-left,0px));
     padding-right:max(16px,env(safe-area-inset-right,0px));
-    padding-bottom:calc(env(safe-area-inset-bottom,0px) + 60px);
-    max-width:100%;height:auto;overflow:visible;-webkit-overflow-scrolling:touch;
+    background:var(--sf);border-bottom:1px solid var(--bd);
+    min-height:calc(env(safe-area-inset-top,0px) + 52px);
   }
-  .form-row{grid-template-columns:1fr}
-  h1{font-size:22px}
-  .subtitle{font-size:13px}
-
-  /* Инпуты 16px — против авто-зума в iOS Safari */
-  input[type=text],input[type=date],input[type=month],input[type=number],select,textarea{
-    font-size:16px;padding:11px 12px;min-height:44px;
+  .mh-brand{display:flex;align-items:center;gap:8px;min-width:0;flex:1}
+  .mh-logo{font-size:22px;line-height:1;flex-shrink:0}
+  .mh-title{font-size:16px;font-weight:600;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mh-actions{display:flex;align-items:center;gap:4px;flex-shrink:0}
+  .mh-clock{font-size:12px;font-weight:600;color:var(--tx);font-variant-numeric:tabular-nums;padding:0 6px;white-space:nowrap}
+  .mh-btn{
+    width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+    background:transparent;border:none;border-radius:8px;font-size:17px;
+    cursor:pointer;color:var(--tx);font-family:inherit;transition:background .15s;
+    -webkit-tap-highlight-color:transparent;padding:0;
   }
-  input[type=text],input[type=number],select,textarea{-webkit-appearance:none;appearance:none}
-  input:focus,select:focus,textarea:focus{font-size:16px;padding-bottom:10px}
-  textarea{min-height:80px}
+  .mh-btn:active,.mh-btn.active{background:var(--prl)}
 
-  /* Крупные тач-таргеты (HIG ≥44px) */
-  .btn{min-height:44px;padding:10px 18px;font-size:14px;-webkit-tap-highlight-color:transparent}
-  .btn-sm{min-height:38px;padding:6px 12px;font-size:13px}
-  .btn-icon{min-width:38px;min-height:38px;justify-content:center}
-  .tab-btn{min-height:40px;padding:8px 14px}
-  .sort-btn{min-height:40px;padding:6px 14px}
+  /* Main content with safe-area top/bottom */
+  .main{
+    padding:12px 16px;
+    padding-left:max(16px,env(safe-area-inset-left,0px));
+    padding-right:max(16px,env(safe-area-inset-right,0px));
+    padding-top:calc(env(safe-area-inset-top,0px) + 68px);
+    padding-bottom:calc(env(safe-area-inset-bottom,0px) + 84px);
+    max-width:100%;height:auto;overflow:visible;
+    -webkit-overflow-scrolling:touch;
+  }
 
-  /* 2 колонки на дашборде */
-  .grid-4{grid-template-columns:repeat(2,1fr);gap:12px}
-  .stat-card{padding:14px}
+  /* Bottom navigation */
+  .bottom-nav{
+    display:flex;align-items:stretch;justify-content:space-around;
+    position:fixed;bottom:0;left:0;right:0;z-index:60;
+    background:var(--sf);border-top:1px solid var(--bd);
+    padding:4px 4px calc(env(safe-area-inset-bottom,0px) + 4px);
+    padding-left:max(4px,env(safe-area-inset-left,0px));
+    padding-right:max(4px,env(safe-area-inset-right,0px));
+    box-shadow:0 -1px 0 var(--bd);
+  }
+  .bn-btn{
+    flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+    padding:8px 2px;min-height:52px;background:transparent;border:none;border-radius:10px;
+    color:var(--mt);font-family:inherit;cursor:pointer;
+    transition:background-color .15s,color .15s;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .bn-btn:active{background:rgba(127,127,127,0.08)}
+  .bn-btn.active{color:var(--pr);background:var(--prl)}
+  .bn-icon{font-size:20px;line-height:1;display:block}
+  .bn-label{font-size:10px;font-weight:500;line-height:1;display:block;letter-spacing:.1px}
+  .bn-btn.active .bn-label{font-weight:600}
+
+  /* FAB */
+  .fab{
+    display:none;position:fixed;
+    right:max(16px,env(safe-area-inset-right,0px));
+    bottom:calc(env(safe-area-inset-bottom,0px) + 76px);
+    width:56px;height:56px;border-radius:50%;
+    background:var(--pr);color:var(--pr-txt);
+    border:none;box-shadow:0 4px 16px rgba(0,103,192,0.35),0 2px 4px rgba(0,0,0,0.1);
+    z-index:55;cursor:pointer;align-items:center;justify-content:center;
+    transition:transform .12s;-webkit-tap-highlight-color:transparent;
+  }
+  .fab.visible{display:flex;animation:fabIn .25s cubic-bezier(.32,.72,0,1)}
+  .fab:active{transform:scale(.92)}
+  @keyframes fabIn{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+
+  /* Filters toggle (collapsible on mobile) */
+  .filters-toggle{
+    display:flex;align-items:center;justify-content:space-between;width:100%;
+    padding:12px 14px;margin-bottom:10px;
+    background:var(--sfa);border:1px solid var(--bd);border-radius:10px;
+    font:inherit;font-size:14px;font-weight:500;color:var(--tx);cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .filters-toggle .filters-chevron{transition:transform .2s;font-size:11px;color:var(--mt)}
+  .filters-toggle.open .filters-chevron{transform:rotate(180deg)}
+  .filters{display:none;flex-direction:column;gap:10px;margin-bottom:14px;padding:14px;background:var(--sfa);border:1px solid var(--bd);border-radius:10px}
+  .filters.open{display:flex}
+  .filters .field{min-width:0;width:100%;margin-bottom:0}
+  .filters .btn{width:100%;justify-content:center}
+
+  /* Hide in-card add button (FAB does it) */
+  #warehouse-add-btn{display:none}
+
+  /* Typography */
+  h1{font-size:22px;letter-spacing:-.3px}
+  h2{font-size:15px}
+  h3{font-size:14.5px}
+  .subtitle{font-size:13px;margin-bottom:16px}
+
+  /* Cards & grid */
+  .card{padding:16px;border-radius:12px}
+  .grid-4{grid-template-columns:repeat(2,1fr);gap:10px}
+  .stat-card{padding:14px;border-radius:12px}
   .stat-value{font-size:22px}
   .stat-value.small{font-size:18px}
+  .stat-label{font-size:11.5px}
 
-  /* Фильтры в столбик */
-  .filters{gap:10px}
-  .filters .field{min-width:0;flex:1 1 100%}
+  /* Forms - iOS-friendly */
+  input[type=text],input[type=date],input[type=month],input[type=number],select,textarea{
+    font-size:16px;padding:12px 14px;min-height:48px;border-radius:10px;
+  }
+  input[type=text],input[type=number],select,textarea{-webkit-appearance:none;appearance:none}
+  input:focus,select:focus,textarea:focus{font-size:16px;padding-bottom:11px}
+  textarea{min-height:88px}
+  .form-row{grid-template-columns:1fr;gap:0}
+  .field label{font-size:13px;margin-bottom:8px}
 
-  /* Таблицы: горизонтальный скролл */
-  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-  th,td{padding:10px 12px;font-size:13px}
+  /* Buttons - HIG ≥44pt */
+  .btn{min-height:46px;padding:11px 18px;font-size:14px;border-radius:10px;-webkit-tap-highlight-color:transparent;transition:transform .1s,background-color .15s}
+  .btn:active{transform:scale(.97)}
+  .btn-sm{min-height:38px;padding:6px 12px;font-size:13px;border-radius:8px}
+  .btn-icon{min-width:40px;min-height:40px;justify-content:center;padding:0}
+  .tab-btn{min-height:42px;padding:9px 14px;font-size:13.5px}
+  .sort-btn{min-height:42px;padding:7px 14px}
+  .actions{flex-direction:column;gap:8px;margin-top:12px}
+  .actions .btn{width:100%;justify-content:center}
+  .actions .btn-primary{min-height:50px;font-size:15px;font-weight:600}
 
-  /* Модалка → bottom-sheet */
-  .modal-overlay{padding:0;align-items:flex-end}
+  /* Tabs - full-width segmented control */
+  .tabs{
+    display:flex;width:100%;max-width:none;padding:4px;
+    border-radius:10px;margin-bottom:14px;overflow:visible;
+  }
+  .tab-btn{flex:1;text-align:center;border-radius:7px}
+
+  /* Section header */
+  .section-header{flex-direction:column;align-items:stretch;gap:10px}
+  .section-header .btn{width:100%;justify-content:center}
+
+  /* Tables → cards */
+  .table-wrap{background:transparent;box-shadow:none;border-radius:0;overflow:visible}
+  .table-wrap table{background:transparent;display:block}
+  .table-wrap thead{display:none}
+  .table-wrap tbody{display:block}
+  .table-wrap tr{
+    display:block;background:var(--sf);border:1px solid var(--bd);
+    border-radius:12px;padding:12px 14px;margin-bottom:10px;
+    box-shadow:var(--sh);
+  }
+  .table-wrap tr:last-child{margin-bottom:0}
+  .table-wrap td{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:5px 0;border:none;font-size:13.5px;white-space:normal;
+    gap:12px;text-align:right;line-height:1.45;
+  }
+  .table-wrap td::before{
+    content:attr(data-label);
+    color:var(--mt);font-size:11.5px;font-weight:500;
+    text-align:left;flex-shrink:0;text-transform:none;letter-spacing:0;
+  }
+  .table-wrap td:empty{display:none}
+  .table-wrap td.actions-cell{
+    justify-content:flex-end;gap:6px;
+    border-top:1px solid var(--bd);padding-top:10px;margin-top:8px;
+  }
+  .table-wrap td.actions-cell::before{display:none}
+  .table-wrap td > strong{font-weight:600}
+  .table-wrap td > .badge{margin-left:auto}
+
+  /* Brigade groups */
+  .brigade-group{background:transparent;margin-bottom:20px}
+  .brigade-group-header{
+    background:transparent;border:none;border-bottom:2px solid var(--pr);
+    border-radius:0;padding:8px 4px;margin-bottom:10px;
+  }
+  .brigade-group .table-wrap{border-radius:0}
+
+  /* Modal → bottom sheet */
+  .modal-overlay{align-items:flex-end;padding:0}
   .modal{
     max-width:100%;width:100%;max-height:92dvh;
-    border-radius:16px 16px 0 0;padding:20px 16px;
-    padding-bottom:calc(env(safe-area-inset-bottom,0px) + 20px);
+    border-radius:20px 20px 0 0;
+    padding:8px 16px calc(env(safe-area-inset-bottom,0px) + 16px);
+    padding-left:max(16px,env(safe-area-inset-left,0px));
+    padding-right:max(16px,env(safe-area-inset-right,0px));
     overflow-y:auto;-webkit-overflow-scrolling:touch;
     animation:sheetUp .28s cubic-bezier(.32,.72,0,1);
   }
   @keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-  .modal > h3:first-child{
-    margin:-20px -16px 16px;padding:20px 16px 12px;
-    border-bottom:1px solid var(--bd);
-    background:var(--sf);
-    position:sticky;top:0;z-index:1;
-  }
   .modal::before{
-    content:"";display:block;width:36px;height:4px;border-radius:2px;
-    background:var(--bd2);margin:-8px auto 12px;
+    content:"";display:block;width:40px;height:4px;border-radius:2px;
+    background:var(--bd2);margin:4px auto 14px;
+  }
+  .modal > h3:first-child{
+    margin:-8px -16px 16px;padding:14px 16px 14px;
+    border-bottom:1px solid var(--bd);background:var(--sf);
+    position:sticky;top:0;z-index:1;border-radius:20px 20px 0 0;
   }
 
-  /* Тосты над home indicator */
-  .toast-container{bottom:calc(env(safe-area-inset-bottom,0px) + 16px);right:12px;left:12px}
+  /* Toasts above bottom nav */
+  .toast-container{
+    bottom:calc(env(safe-area-inset-bottom,0px) + 76px);
+    right:12px;left:12px;
+  }
   .toast{min-width:0;max-width:100%}
   .toast.greeting{min-width:0;max-width:100%}
-  .save-indicator{bottom:calc(env(safe-area-inset-bottom,0px) + 60px);left:50%;transform:translateX(-50%)}
-
-  /* Часы в sticky-хэдере */
-  .clock-widget{
-    margin-top:0;padding:8px 10px;font-size:11px;gap:4px;
-    flex-shrink:0;min-height:40px;user-select:none;pointer-events:none;
+  .save-indicator{
+    bottom:calc(env(safe-area-inset-bottom,0px) + 76px);
+    left:50%;transform:translateX(-50%);
   }
-  .clock-widget .clock-icon,.clock-widget .clock-date{display:none}
-  .clock-widget .clock-time{padding-left:0;margin-left:0;border-left:none}
 
-  /* Копирайт-пилюля в правом нижнем углу */
-  .sidebar-footer{
-    position:fixed;
-    bottom:calc(env(safe-area-inset-bottom,0px) + 6px);
-    right:max(6px,env(safe-area-inset-right,0px));
-    margin:0;padding:4px 10px;
-    background:var(--sf);border:1px solid var(--bd);border-radius:999px;
-    font-size:10px;z-index:40;box-shadow:var(--sh);
-  }
-  .sidebar-footer b{
-    font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-    max-width:calc(100vw - 32px);display:inline;
-  }
-  .sidebar-footer span{display:none}
-
-  /* О программе */
+  /* About page */
   .about-grid{grid-template-columns:1fr;gap:2px 0}
   .about-grid .k{margin-top:6px}
   .about-head{gap:12px}
   .about-logo{width:48px;height:48px;font-size:28px}
   .about-title{font-size:16px}
+  .about-section-title{font-size:10.5px}
+
+  /* Sidebar footer - hide (info on about page) */
+  .sidebar-footer{display:none}
 }</style></head><body>
+
+<!-- ===== MOBILE HEADER ===== -->
+<header class="mobile-header">
+  <div class="mh-brand"><span class="mh-logo">🪨</span><span class="mh-title">БурУчёт</span></div>
+  <div class="mh-actions">
+    <span class="mh-clock" id="mh-clock"></span>
+    <button class="mh-btn" id="mh-theme" aria-label="Тема">🌗</button>
+    <button class="mh-btn" data-page="about" aria-label="О программе">ℹ️</button>
+  </div>
+</header>
+
 <div class="app"><aside class="sidebar"><div class="logo"><span class="logo-icon">🪨</span><span>БурУчёт</span></div><button class="nav-btn active" data-page="dashboard">📊 Обзор</button><button class="nav-btn" data-page="issue">➕ Выдача</button><button class="nav-btn" data-page="journal">📋 Журнал</button><button class="nav-btn" data-page="warehouse">📦 Склад <span class="beta-badge">beta</span></button><button class="nav-btn" data-page="export">⚙️ Настройки</button><div class="clock-widget" id="clock-widget" aria-live="off"><span class="clock-icon">🕐</span><span class="clock-date" id="clock-date"></span><span class="clock-time" id="clock-time"></span></div><button class="nav-btn theme-toggle" id="theme-toggle"></button><button class="nav-btn about-link" data-page="about"><span>ℹ️</span><span class="about-label">О программе</span></button><div class="sidebar-footer"><b>© 2026 Евгений Никитин Игоревич</b><span>Все права защищены</span></div></aside><main class="main">
 <div class="page active" id="page-dashboard"><h1>Обзор</h1><p class="subtitle">Сводная информация по выдаче и наработке</p><div class="grid grid-4" id="dashboard-stats"></div><div class="grid grid-4" id="dashboard-breakdown" style="margin-top:16px;"></div><div class="card" style="margin-top:16px;"><h2>Последние выдачи</h2><div id="recent-issues"></div></div></div>
 <div class="page" id="page-issue"><h1>Выдача</h1><p class="subtitle">Выдача алмазного инструмента бригаде</p><div class="tabs" id="issue-tabs"><button class="tab-btn active" data-issue-tab="bit">🪨 Коронка</button><button class="tab-btn" data-issue-tab="reamer">Расширитель</button><button class="tab-btn" data-issue-tab="shoe">Башмак</button></div><div id="issue-form-content"></div></div>
-<div class="page" id="page-journal"><h1>Журнал выдач</h1><p class="subtitle">Все записи о выдаче</p><div class="tabs" id="journal-tabs"><button class="tab-btn active" data-journal-tab="bit">🪨 Коронки</button><button class="tab-btn" data-journal-tab="reamer">Расширители</button><button class="tab-btn" data-journal-tab="shoe">Башмаки</button></div><div class="filters"><div class="field"><label>Поиск по серийному №</label><input type="text" id="filter-search" list="filter-search-list" placeholder="Введите номер..." autocomplete="off"><datalist id="filter-search-list"></datalist></div><div class="field"><label>Месяц</label><input type="month" id="filter-month"></div><div class="field"><label>&nbsp;</label><label style="display:flex;align-items:center;gap:6px;height:37px;font-size:13px;font-weight:400;margin:0;cursor:pointer;white-space:nowrap;user-select:none;"><input type="checkbox" id="filter-all-months" style="width:auto;margin:0;cursor:pointer;"> Все месяцы</label></div><div class="field"><label>Бригада</label><select id="filter-brigade"><option value="">Все бригады</option></select></div><div class="field"><label>Статус</label><select id="filter-status"><option value="">Все</option><option value="issued">Выдан</option><option value="returned">Возвращён</option><option value="written_off">Списан</option></select></div><button class="btn btn-secondary" id="filter-reset">Сбросить</button></div><div id="journal-content"></div></div>
+<div class="page" id="page-journal"><h1>Журнал выдач</h1><p class="subtitle">Все записи о выдаче</p><div class="tabs" id="journal-tabs"><button class="tab-btn active" data-journal-tab="bit">🪨 Коронки</button><button class="tab-btn" data-journal-tab="reamer">Расширители</button><button class="tab-btn" data-journal-tab="shoe">Башмаки</button></div><button class="filters-toggle" id="filters-toggle" type="button"><span>🔍 Фильтры</span><span class="filters-chevron">▼</span></button><div class="filters" id="journal-filters"><div class="field"><label>Поиск по серийному №</label><input type="text" id="filter-search" list="filter-search-list" placeholder="Введите номер..." autocomplete="off"><datalist id="filter-search-list"></datalist></div><div class="field"><label>Месяц</label><input type="month" id="filter-month"></div><div class="field"><label>&nbsp;</label><label style="display:flex;align-items:center;gap:6px;height:37px;font-size:13px;font-weight:400;margin:0;cursor:pointer;white-space:nowrap;user-select:none;"><input type="checkbox" id="filter-all-months" style="width:auto;margin:0;cursor:pointer;"> Все месяцы</label></div><div class="field"><label>Бригада</label><select id="filter-brigade"><option value="">Все бригады</option></select></div><div class="field"><label>Статус</label><select id="filter-status"><option value="">Все</option><option value="issued">Выдан</option><option value="returned">Возвращён</option><option value="written_off">Списан</option></select></div><button class="btn btn-secondary" id="filter-reset">Сбросить</button></div><div id="journal-content"></div></div>
 <div class="page" id="page-warehouse"><h1>Склад <span class="badge badge-beta" style="vertical-align:middle;margin-left:8px;">beta</span></h1><p class="subtitle">Общее количество инструмента на складе</p><div class="beta-box" style="margin-bottom:16px;">🧪 <strong>Раздел в бета-тестировании.</strong> Учёт общего количества на складе — новая функция. Возможны изменения в интерфейсе и формате данных. Пожалуйста, проверяйте результаты и сообщайте о проблемах через форму обратной связи в разделе «О программе».</div><div class="grid grid-4" id="warehouse-overview"></div><div class="tabs" id="warehouse-tabs" style="margin-top:16px;"><button class="tab-btn active" data-warehouse-tab="bits">🪨 Коронки</button><button class="tab-btn" data-warehouse-tab="reamers">Расширители</button><button class="tab-btn" data-warehouse-tab="shoes">Башмаки</button></div><div class="card"><div class="section-header"><h2 id="warehouse-title">Коронки</h2><button class="btn btn-primary" id="warehouse-add-btn">➕ Добавить</button></div><div id="warehouse-content"></div></div></div>
-<div class="page" id="page-export"><h1>Настройки</h1><p class="subtitle">Экспорт, резервное копирование и управление данными</p><div class="card" style="max-width:640px;"><h2>🔄 Авто-бэкап на диск</h2><p class="hint" style="margin-bottom:12px;">Каждое сохранение автоматически записывается в выбранную папку. При первом включении браузер спросит разрешение на доступ к папке — оно сохраняется между сессиями.</p><div id="autobackup-status" style="margin-bottom:12px;"></div><div class="actions"><button class="btn btn-primary" id="autobackup-enable">📁 Включить авто-бэкап</button><button class="btn btn-secondary" id="autobackup-save-now" style="display:none;">💾 Сохранить сейчас</button><button class="btn btn-secondary" id="autobackup-restore" style="display:none;">📂 Восстановить из папки</button><button class="btn btn-secondary" id="autobackup-disable" style="display:none;">Отключить</button></div></div><div class="card" style="max-width:640px;"><h2>📊 Отчёт в Excel</h2><div class="form-row"><div class="field"><label>С месяца</label><input type="month" id="export-month-from"></div><div class="field"><label>По месяц</label><input type="month" id="export-month-to"></div></div><p class="hint" style="margin:-6px 0 12px;">Если оба поля пусты — выгружается текущий месяц. Если заполнено только одно — выгружается этот месяц. Если «С» больше «По» — значения поменяются местами автоматически.</p><div class="actions"><button class="btn btn-primary" id="export-excel">📥 Скачать Excel (.xlsx)</button><button class="btn btn-secondary" id="export-csv">📄 Скачать CSV</button></div></div><div class="card" style="max-width:600px;"><h2>💾 Резервная копия</h2><div class="actions"><button class="btn btn-secondary" id="backup-download">⬇️ Скачать JSON</button><button class="btn btn-secondary" id="backup-restore">⬆️ Восстановить из JSON</button><input type="file" id="backup-file" accept=".json" style="display:none;"></div></div><div class="card" style="max-width:600px;"><h2>⚠️ Опасная зона</h2><button class="btn btn-danger" id="clear-all">🗑️ Удалить все данные</button></div></div>
+<div class="page" id="page-export"><h1>Настройки</h1><p class="subtitle">Экспорт, резервное копирование и управление данными</p><div class="card" style="max-width:640px;"><h2>🔄 Авто-бэкап на диск</h2><p class="hint" style="margin-bottom:12px;">Каждое сохранение автоматически записывается в выбранную папку. При первом включении браузер спросит разрешение на доступ к папке — оно сохраняется между сессиями.</p><div id="autobackup-status" style="margin-bottom:12px;"></div><div class="actions"><button class="btn btn-primary" id="autobackup-enable">📁 Включить авто-бэкап</button><button class="btn btn-secondary" id="autobackup-save-now" style="display:none;">💾Сохранить сейчас</button><button class="btn btn-secondary" id="autobackup-restore" style="display:none;">📂 Восстановить из папки</button><button class="btn btn-secondary" id="autobackup-disable" style="display:none;">Отключить</button></div></div><div class="card" style="max-width:640px;"><h2>📊 Отчёт в Excel</h2><div class="form-row"><div class="field"><label>С месяца</label><input type="month" id="export-month-from"></div><div class="field"><label>По месяц</label><input type="month" id="export-month-to"></div></div><p class="hint" style="margin:-6px 0 12px;">Если оба поля пусты — выгружается текущий месяц. Если заполнено только одно — выгружается этот месяц. Если «С» больше «По» — значения поменяются местами автоматически.</p><div class="actions"><button class="btn btn-primary" id="export-excel">📥 Скачать Excel (.xlsx)</button><button class="btn btn-secondary" id="export-csv">📄 Скачать CSV</button></div></div><div class="card" style="max-width:600px;"><h2>💾 Резервная копия</h2><div class="actions"><button class="btn btn-secondary" id="backup-download">⬇️ Скачать JSON</button><button class="btn btn-secondary" id="backup-restore">⬆️ Восстановить из JSON</button><input type="file" id="backup-file" accept=".json" style="display:none;"></div></div><div class="card" style="max-width:600px;"><h2>⚠️ Опасная зона</h2><button class="btn btn-danger" id="clear-all">🗑️ Удалить все данные</button></div></div>
 <div class="page" id="page-about"><h1>О программе</h1><p class="subtitle">Информация о приложении и история версий</p><div class="card" style="max-width:820px;"><div class="about-head"><div class="about-logo">🪨</div><div><div class="about-title">БурУчёт</div><div class="about-meta"><span class="badge badge-ver">Версия 1.0.1</span><span>учёт бурового инструмента</span></div></div></div><p class="about-desc">Учёт выдачи и наработки бурового алмазного инструмента — коронок, расширителей и башмаков. Приложение работает полностью в браузере: данные хранятся локально на устройстве, без сервера и подключения к интернету.</p><div class="about-section"><div class="about-section-title">Реквизиты</div><div class="about-grid"><span class="k">Автор:</span><span class="v">Евгений Никитин Игоревич</span><span class="k">Почта:</span><span class="v"><a href="mailto:klasniiyparen@mail.ru">klasniiyparen@mail.ru</a></span><span class="k">Хранилище:</span><span class="v">localStorage + IndexedDB (фото)</span><span class="k">Экспорт:</span><span class="v">Excel (.xlsx), CSV, JSON</span><span class="k">Браузеры:</span><span class="v">Chrome, Edge, Яндекс.Браузер</span><span class="k">Горячие клавиши:</span><span class="v"><kbd style="font-family:inherit;background:var(--sfa);padding:1px 6px;border-radius:3px;border:1px solid var(--bd);">Ctrl</kbd> + <kbd style="font-family:inherit;background:var(--sfa);padding:1px 6px;border-radius:3px;border:1px solid var(--bd);">S</kbd> — сохранить</span></div></div><div class="about-section"><div class="about-section-title">Обратная связь</div><p class="about-desc" style="margin-bottom:12px;">Есть идея, как улучшить БурУчёт, или не хватает какой-то функции? Напишите автору — предложения помогают сделать программу лучше.</p><div class="field"><label for="feedback-text">Ваше предложение <span class="opt">(необязательно)</span></label><textarea id="feedback-text" placeholder="Например: добавить учёт по буровым установкам, разбивку по объектам, экспорт в PDF..."></textarea></div><div class="actions"><button class="btn btn-primary" id="feedback-send">✉️ Отправить на почту</button><button class="btn btn-secondary" id="feedback-copy">📋 Скопировать адрес</button></div><p class="hint" style="margin-top:10px;">Письмо откроется в вашем почтовом клиенте. К тексту автоматически добавятся версия программы, дата и браузер — это поможет быстрее разобраться в вопросе.</p></div><div class="about-section"><div class="about-section-title">Что нового</div><div class="changelog"><div class="cl-item"><div class="cl-head"><span class="badge badge-ver">1.0.1</span><span class="cl-date">Обновление · Ноябрь 2026</span></div><ul class="cl-list"><li>Выгрузка отчёта в Excel за выбранный период: «с месяца … по месяц»</li><li>Настоящий формат .xlsx (Office Open XML) вместо .xls</li><li>Генерация книги без внешних библиотек — полностью офлайн</li><li>В журнале появился флажок «Все месяцы» — просмотр записей за всё время</li><li>Карточка «Обратная связь» убрана из «Настроек» — форма доступна в разделе «О программе»</li></ul></div><div class="cl-item"><div class="cl-head"><span class="badge badge-ver">1.0.0</span><span class="cl-date">Первый релиз · Ноябрь 2026</span></div><ul class="cl-list"><li>Учёт выдачи и наработки коронок, расширителей и башмаков</li><li>Вкладка «Склад» <span class="badge badge-beta" style="font-size:9.5px;">beta</span> — учёт общего количества коронок, расширителей и башмаков по наименованиям и размерам</li><li>Журнал выдач с фильтрами по месяцу, бригаде и статусу</li><li>Группировка записей по бригадам</li><li>Поиск по серийному номеру с автодополнением по всем типам инструмента</li><li>Счётчик найденных записей при активном поиске</li><li>Формы выдачи и списания с автоматическим черновиком (хранится 24 часа)</li><li>Фото износа инструмента со сжатием (IndexedDB, до 1200 px)</li><li>Экспорт в Excel: сводный лист + отдельный лист на каждую бригаду</li><li>Экспорт в CSV по всем типам инструмента</li><li>Резервные копии JSON с восстановлением и проверкой формата</li><li>Авто-бэкап в выбранную папку на диске с историей за 30 дней</li><li>Восстановление данных прямо из папки авто-бэкапа</li><li>Тёмная, светлая и автоматическая тема</li><li>Приветствие по времени суток, часы в сайдбаре</li><li>Форма обратной связи: отправка предложений автору через почтовый клиент</li><li>Горячая клавиша Ctrl+S для сохранения, защита от случайного закрытия вкладки</li><li>Адаптивная вёрстка для мобильных устройств</li></ul></div></div></div><div class="about-footer">© 2026 Евгений Никитин Игоревич. Все права защищены.<br>Раздел «Склад» находится в бета-тестировании.</div></div></div>
 </main></div>
+
+<!-- ===== MOBILE BOTTOM NAV ===== -->
+<nav class="bottom-nav" id="bottom-nav">
+  <button class="bn-btn active" data-page="dashboard"><span class="bn-icon">📊</span><span class="bn-label">Обзор</span></button>
+  <button class="bn-btn" data-page="issue"><span class="bn-icon">➕</span><span class="bn-label">Выдача</span></button>
+  <button class="bn-btn" data-page="journal"><span class="bn-icon">📋</span><span class="bn-label">Журнал</span></button>
+  <button class="bn-btn" data-page="warehouse"><span class="bn-icon">📦</span><span class="bn-label">Склад</span></button>
+  <button class="bn-btn" data-page="export"><span class="bn-icon">⚙️</span><span class="bn-label">Настройки</span></button>
+</nav>
+
+<!-- ===== FAB ===== -->
+<button class="fab" id="fab" aria-label="Добавить">➕</button>
+
 <div class="modal-overlay" id="modal-overlay"><div class="modal" id="modal-content"></div></div>
 <div class="toast-container" id="toasts"></div>
 <script>
@@ -421,13 +547,47 @@ function issueBadge(i,k){const b=k==='bit';if(i.decommissioned)return`<span clas
 function applyTheme(){const r=document.documentElement;if(state.theme==='light')r.setAttribute('data-theme','light');else if(state.theme==='dark')r.setAttribute('data-theme','dark');else r.removeAttribute('data-theme');updateThemeButton();updateMetaThemeColor()}
 function isDarkNow(){if(state.theme==='dark')return true;if(state.theme==='light')return false;return window.matchMedia('(prefers-color-scheme: dark)').matches}
 function updateMetaThemeColor(){const m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',isDarkNow()?'#202020':'#0067C0')}
-function updateThemeButton(){const b=document.getElementById('theme-toggle');if(!b)return;const L={auto:['🌗','Авто'],light:['☀️','Светлая'],dark:['🌙','Тёмная']};const[icon,text]=L[state.theme]||L.auto;b.innerHTML=`<span class="icon">${icon}</span><span class="theme-label">${text}</span>`;b.title=`Тема: ${text}`}
+function updateThemeButton(){const b=document.getElementById('theme-toggle');if(!b)return;const L={auto:['🌗','Авто'],light:['☀️','Светлая'],dark:['🌙','Тёмная']};const[icon,text]=L[state.theme]||L.auto;b.innerHTML=`<span class="icon">${icon}</span><span class="theme-label">${text}</span>`;b.title=`Тема: ${text}`;const mh=document.getElementById('mh-theme');if(mh)mh.textContent=icon}
 function cycleTheme(){const o=['auto','light','dark'];state.theme=o[(o.indexOf(state.theme)+1)%o.length];saveThemePref(state.theme);applyTheme();toast(`Тема: ${{auto:'авто',light:'светлая',dark:'тёмная'}[state.theme]}`)}
 document.getElementById('theme-toggle').addEventListener('click',cycleTheme);
-$$('.nav-btn').forEach(b=>{if(b.id==='theme-toggle')return;b.addEventListener('click',()=>{state.page=b.dataset.page;$$('.nav-btn').forEach(x=>{if(x.id!=='theme-toggle')x.classList.toggle('active',x===b)});$$('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+state.page));render()})});
+const mhTheme=document.getElementById('mh-theme');if(mhTheme)mhTheme.addEventListener('click',cycleTheme);
+
+/* Navigation — sync sidebar + mobile bottom nav + mobile header */
+function navigateTo(page){
+  state.page=page;
+  $$('.nav-btn').forEach(x=>{if(x.id!=='theme-toggle')x.classList.toggle('active',x.dataset.page===page)});
+  $$('.bn-btn').forEach(x=>x.classList.toggle('active',x.dataset.page===page));
+  $$('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+page));
+  updateFab();
+  render();
+  window.scrollTo(0,0);
+}
+$$('.nav-btn').forEach(b=>{if(b.id==='theme-toggle')return;b.addEventListener('click',()=>navigateTo(b.dataset.page))});
+$$('.bn-btn').forEach(b=>b.addEventListener('click',()=>navigateTo(b.dataset.page)));
+const mhAbout=document.querySelector('.mh-btn[data-page="about"]');if(mhAbout)mhAbout.addEventListener('click',()=>navigateTo('about'));
 $$('#issue-tabs .tab-btn').forEach(b=>b.addEventListener('click',()=>{state.issueTab=b.dataset.issueTab;$$('#issue-tabs .tab-btn').forEach(x=>x.classList.toggle('active',x===b));renderIssueForm()}));
 $$('#journal-tabs .tab-btn').forEach(b=>b.addEventListener('click',()=>{state.journalTab=b.dataset.journalTab;$$('#journal-tabs .tab-btn').forEach(x=>x.classList.toggle('active',x===b));renderJournal()}));
 $$('#warehouse-tabs .tab-btn').forEach(b=>b.addEventListener('click',()=>{state.warehouseTab=b.dataset.warehouseTab;$$('#warehouse-tabs .tab-btn').forEach(x=>x.classList.toggle('active',x===b));renderWarehouse()}));
+
+/* Filters toggle (mobile collapsible) */
+const filtersToggle=document.getElementById('filters-toggle');
+const journalFilters=document.getElementById('journal-filters');
+if(filtersToggle&&journalFilters){filtersToggle.addEventListener('click',()=>{const open=journalFilters.classList.toggle('open');filtersToggle.classList.toggle('open',open)})}
+
+/* FAB */
+function updateFab(){
+  const fab=document.getElementById('fab');if(!fab)return;
+  const show=['dashboard','journal','warehouse'].includes(state.page);
+  fab.classList.toggle('visible',show);
+  fab.onclick=()=>{
+    if(state.page==='issue'){/*not shown*/}
+    else if(state.page==='journal'){navigateTo('issue')}
+    else if(state.page==='warehouse'){window.openAddWarehouseItem()}
+    else if(state.page==='dashboard'){navigateTo('issue')}
+  };
+}
+updateFab();
+
 function renderDashboard(){
   const{bits,issues,reamers,shoes,toolIssues}=state.data;
   const m=currentMonth();
@@ -464,7 +624,7 @@ function renderDashboard(){
   const recentRows=allRecent.map(i=>{
     const isBit=i._type==='bit';
     const editBtn=i._obj?`<button class="btn btn-sm btn-secondary btn-icon" onclick="${isBit?`openEditBit('${i._obj.id}')`:`openEditTool('${i._type}','${i._obj.id}')`}">✏️</button>`:'';
-    return `<tr><td>${fmtDate(i.issuedAt)}</td><td>${typeLabel(i._type)}</td><td>${esc(i.brigade)}</td><td>${esc(i.recipient)}</td><td>${nameOrDash(i._obj?.name)}</td><td>${esc(i._obj?.size||'—')}</td><td><strong>${esc(i._obj?.serialNumber||'—')}</strong></td><td>${issueBadge(i,isBit?'bit':'tool')}</td><td class="actions-cell">${editBtn}</td></tr>`}).join('');
+    return `<tr><td data-label="Дата">${fmtDate(i.issuedAt)}</td><td data-label="Тип">${typeLabel(i._type)}</td><td data-label="Бригада">${esc(i.brigade)}</td><td data-label="Получатель">${esc(i.recipient)}</td><td data-label="Наименование">${nameOrDash(i._obj?.name)}</td><td data-label="Размер">${esc(i._obj?.size||'—')}</td><td data-label="Серийный №"><strong>${esc(i._obj?.serialNumber||'—')}</strong></td><td data-label="Статус">${issueBadge(i,isBit?'bit':'tool')}</td><td class="actions-cell">${editBtn}</td></tr>`}).join('');
   $('#recent-issues').innerHTML=`<div class="table-wrap"><table><thead><tr><th>Дата</th><th>Тип</th><th>Бригада</th><th>Получатель</th><th>Наименование</th><th>Размер</th><th>Серийный №</th><th>Статус</th><th></th></tr></thead><tbody>${recentRows}</tbody></table></div>`;
 }
 function renderIssueForm(){if(state.issueTab==='bit')renderBitForm();else renderToolForm(state.issueTab)}
@@ -479,9 +639,9 @@ function renderJournal(){renderFilters();if(state.journalTab==='bit')renderBitJo
 function toolbarHTML(){return`<div class="sort-toolbar"><span class="sort-label">Группировка:</span><button class="sort-btn ${state.journalGroup?'active':''}" onclick="toggleJournalGroup()">${state.journalGroup?'✓ ':''}По бригадам</button></div>`}
 window.toggleJournalGroup=()=>{state.journalGroup=!state.journalGroup;renderJournal()};
 function renderBitJournal(){const{issues}=state.data;const{month,brigade,status,search,allMonths}=state.filters;let list=[...issues];if(!allMonths&&month&&!search)list=list.filter(i=>i.issuedAt&&i.issuedAt.startsWith(month));if(brigade)list=list.filter(i=>i.brigade===brigade);if(search){const q=search.toLowerCase();list=list.filter(i=>{const b=state.data.bits.find(x=>x.id===i.bitId);return b&&(b.serialNumber||'').toLowerCase().includes(q)})}if(status==='issued')list=list.filter(i=>!i.returnedAt);if(status==='returned')list=list.filter(i=>!!i.returnedAt&&!i.decommissioned);if(status==='written_off')list=list.filter(i=>!!i.decommissioned);const tb=toolbarHTML()+(search?`<div class="hint" style="margin-bottom:10px;">Найдено: <strong>${list.length}</strong> ${plural(list.length,'запись','записи','записей')} по серийному № «${esc(search)}» <span class="muted">(за все месяцы)</span></div>`:'');if(!list.length){$('#journal-content').innerHTML=tb+`<div class="empty"><div class="empty-icon">📋</div><div>${search?'Ничего не найдено':'Нет записей'}</div></div>`;return}if(state.journalGroup){const gr={};list.forEach(i=>{const k=(i.brigade||'').trim()||'Без бригады';(gr[k]=gr[k]||[]).push(i)});$('#journal-content').innerHTML=tb+Object.keys(gr).sort((a,b)=>a.localeCompare(b,'ru',{numeric:true})).map(n=>{const items=gr[n].slice().sort((a,b)=>(b.issuedAt||'').localeCompare(a.issuedAt||''));return`<div class="brigade-group"><div class="brigade-group-header"><div><span class="brigade-name">${esc(n)}</span><span class="brigade-count">${items.length} ${plural(items.length,'запись','записи','записей')}</span></div></div><div class="table-wrap"><table><thead><tr><th>Дата</th><th>Получатель</th><th>Выдал</th><th>Наименование</th><th>Размер</th><th>Серийный №</th><th>Дата списания</th><th>Пробурено</th><th>Статус</th><th></th></tr></thead><tbody>${items.map(i=>bitRow(i,false)).join('')}</tbody></table></div></div>`}).join('')}else{list.sort((a,b)=>(b.issuedAt||'').localeCompare(a.issuedAt||''));$('#journal-content').innerHTML=tb+`<div class="table-wrap"><table><thead><tr><th>Дата</th><th>Бригада</th><th>Получатель</th><th>Выдал</th><th>Наименование</th><th>Размер</th><th>Серийный №</th><th>Дата списания</th><th>Пробурено</th><th>Статус</th><th></th></tr></thead><tbody>${list.map(i=>bitRow(i,true)).join('')}</tbody></table></div>`}}
-function bitRow(i,showB){const b=state.data.bits.find(x=>x.id===i.bitId);const closed=!!i.returnedAt;const dr=closed&&i.finalMeterage!=null?(i.finalMeterage-(i.initialMeterage||0)):null;const photoBtn=photoKeys.has(i.id)?`<button class="btn btn-sm btn-secondary btn-icon" onclick="openPhoto('${i.id}')" title="Фото">📷</button>`:'';return`<tr><td>${fmtDate(i.issuedAt)}</td>${showB?`<td>${esc(i.brigade)}</td>`:''}<td>${esc(i.recipient)}</td><td>${esc(i.issuedBy)}</td><td>${nameOrDash(b?.name)}</td><td>${esc(b?.size||'—')}</td><td><strong>${esc(b?.serialNumber||'—')}</strong></td><td>${closed?fmtDate(i.returnedAt):'—'}</td><td>${closed?fmtNum(dr)+' м':'—'}</td><td>${issueBadge(i,'bit')}</td><td class="actions-cell">${!closed?`<button class="btn btn-sm btn-danger" onclick="openWriteOff('${i.id}')">Списать</button>`:''}${photoBtn}<button class="btn btn-sm btn-secondary btn-icon" onclick="openEditBit('${b?.id}')" title="Редактировать">✏️</button><button class="btn btn-sm btn-secondary btn-icon" onclick="openDeleteIssue('${i.id}')" title="Удалить">✕</button></td></tr>`}
+function bitRow(i,showB){const b=state.data.bits.find(x=>x.id===i.bitId);const closed=!!i.returnedAt;const dr=closed&&i.finalMeterage!=null?(i.finalMeterage-(i.initialMeterage||0)):null;const photoBtn=photoKeys.has(i.id)?`<button class="btn btn-sm btn-secondary btn-icon" onclick="openPhoto('${i.id}')" title="Фото">📷</button>`:'';return`<tr><td data-label="Дата">${fmtDate(i.issuedAt)}</td>${showB?`<td data-label="Бригада">${esc(i.brigade)}</td>`:''}<td data-label="Получатель">${esc(i.recipient)}</td><td data-label="Выдал">${esc(i.issuedBy)}</td><td data-label="Наименование">${nameOrDash(b?.name)}</td><td data-label="Размер">${esc(b?.size||'—')}</td><td data-label="Серийный №"><strong>${esc(b?.serialNumber||'—')}</strong></td><td data-label="Дата списания">${closed?fmtDate(i.returnedAt):'—'}</td><td data-label="Пробурено">${closed?fmtNum(dr)+' м':'—'}</td><td data-label="Статус">${issueBadge(i,'bit')}</td><td class="actions-cell">${!closed?`<button class="btn btn-sm btn-danger" onclick="openWriteOff('${i.id}')">Списать</button>`:''}${photoBtn}<button class="btn btn-sm btn-secondary btn-icon" onclick="openEditBit('${b?.id}')" title="Редактировать">✏️</button><button class="btn btn-sm btn-secondary btn-icon" onclick="openDeleteIssue('${i.id}')" title="Удалить">✕</button></td></tr>`}
 function renderToolJournal(type){const{month,brigade,status,search,allMonths}=state.filters;let list=state.data.toolIssues.filter(i=>i.toolType===type);if(!allMonths&&month&&!search)list=list.filter(i=>i.issuedAt&&i.issuedAt.startsWith(month));if(brigade)list=list.filter(i=>i.brigade===brigade);if(search){const q=search.toLowerCase();list=list.filter(i=>{const t=getTool(i.toolType,i.toolId);return t&&(t.serialNumber||'').toLowerCase().includes(q)})}if(status==='issued')list=list.filter(i=>!i.returnedAt);if(status==='returned')list=list.filter(i=>!!i.returnedAt&&!i.decommissioned);if(status==='written_off')list=list.filter(i=>!!i.decommissioned);const tb=toolbarHTML()+(search?`<div class="hint" style="margin-bottom:10px;">Найдено: <strong>${list.length}</strong> ${plural(list.length,'запись','записи','записей')} по серийному № «${esc(search)}» <span class="muted">(за все месяцы)</span></div>`:'');if(!list.length){$('#journal-content').innerHTML=tb+`<div class="empty"><div class="empty-icon">📋</div><div>${search?'Ничего не найдено':'Нет записей'}</div></div>`;return}if(state.journalGroup){const gr={};list.forEach(i=>{const k=(i.brigade||'').trim()||'Без бригады';(gr[k]=gr[k]||[]).push(i)});$('#journal-content').innerHTML=tb+Object.keys(gr).sort((a,b)=>a.localeCompare(b,'ru',{numeric:true})).map(n=>{const items=gr[n].slice().sort((a,b)=>(b.issuedAt||'').localeCompare(a.issuedAt||''));return`<div class="brigade-group"><div class="brigade-group-header"><div><span class="brigade-name">${esc(n)}</span><span class="brigade-count">${items.length} ${plural(items.length,'запись','записи','записей')}</span></div></div><div class="table-wrap"><table><thead><tr><th>Дата</th><th>Получатель</th><th>Выдал</th><th>Наименование</th><th>Размер</th><th>Серийный №</th><th>Дата списания</th><th>Пробурено</th><th>Статус</th><th></th></tr></thead><tbody>${items.map(i=>toolRow(type,i,false)).join('')}</tbody></table></div></div>`}).join('')}else{list.sort((a,b)=>(b.issuedAt||'').localeCompare(a.issuedAt||''));$('#journal-content').innerHTML=tb+`<div class="table-wrap"><table><thead><tr><th>Дата</th><th>Бригада</th><th>Получатель</th><th>Выдал</th><th>Наименование</th><th>Размер</th><th>Серийный №</th><th>Дата списания</th><th>Пробурено</th><th>Статус</th><th></th></tr></thead><tbody>${list.map(i=>toolRow(type,i,true)).join('')}</tbody></table></div>`}}
-function toolRow(type,i,showB){const t=getTool(type,i.toolId);const closed=!!i.returnedAt;const dr=closed&&i.finalMeterage!=null?(i.finalMeterage-(i.initialMeterage||0)):null;const photoBtn=photoKeys.has(i.id)?`<button class="btn btn-sm btn-secondary btn-icon" onclick="openPhoto('${i.id}')" title="Фото">📷</button>`:'';return`<tr><td>${fmtDate(i.issuedAt)}</td>${showB?`<td>${esc(i.brigade)}</td>`:''}<td>${esc(i.recipient)}</td><td>${esc(i.issuedBy)}</td><td>${nameOrDash(t?.name)}</td><td>${esc(t?.size||'—')}</td><td><strong>${esc(t?.serialNumber||'—')}</strong></td><td>${closed?fmtDate(i.returnedAt):'—'}</td><td>${closed?fmtNum(dr)+' м':'—'}</td><td>${issueBadge(i,'tool')}</td><td class="actions-cell">${!closed?`<button class="btn btn-sm btn-danger" onclick="openWriteOffTool('${type}','${i.toolId}')">Списать</button>`:''}${photoBtn}<button class="btn btn-sm btn-secondary btn-icon" onclick="openEditTool('${type}','${t?.id}')" title="Редактировать">✏️</button><button class="btn btn-sm btn-secondary btn-icon" onclick="openDeleteToolIssue('${i.id}')" title="Удалить">✕</button></td></tr>`}
+function toolRow(type,i,showB){const t=getTool(type,i.toolId);const closed=!!i.returnedAt;const dr=closed&&i.finalMeterage!=null?(i.finalMeterage-(i.initialMeterage||0)):null;const photoBtn=photoKeys.has(i.id)?`<button class="btn btn-sm btn-secondary btn-icon" onclick="openPhoto('${i.id}')" title="Фото">📷</button>`:'';return`<tr><td data-label="Дата">${fmtDate(i.issuedAt)}</td>${showB?`<td data-label="Бригада">${esc(i.brigade)}</td>`:''}<td data-label="Получатель">${esc(i.recipient)}</td><td data-label="Выдал">${esc(i.issuedBy)}</td><td data-label="Наименование">${nameOrDash(t?.name)}</td><td data-label="Размер">${esc(t?.size||'—')}</td><td data-label="Серийный №"><strong>${esc(t?.serialNumber||'—')}</strong></td><td data-label="Дата списания">${closed?fmtDate(i.returnedAt):'—'}</td><td data-label="Пробурено">${closed?fmtNum(dr)+' м':'—'}</td><td data-label="Статус">${issueBadge(i,'tool')}</td><td class="actions-cell">${!closed?`<button class="btn btn-sm btn-danger" onclick="openWriteOffTool('${type}','${i.toolId}')">Списать</button>`:''}${photoBtn}<button class="btn btn-sm btn-secondary btn-icon" onclick="openEditTool('${type}','${t?.id}')" title="Редактировать">✏️</button><button class="btn btn-sm btn-secondary btn-icon" onclick="openDeleteToolIssue('${i.id}')" title="Удалить">✕</button></td></tr>`}
 /* ===== Склад ===== */
 function maybeShowWarehouseBetaNotice(){
   try{
@@ -509,7 +669,7 @@ function renderWarehouse(){
   const tabTotal=items.reduce((s,x)=>s+(Number(x.qty)||0),0);
   $('#warehouse-title').innerHTML=`${tabLabel} <span class="muted" style="font-weight:400;font-size:14px;">— всего ${tabTotal} шт.</span>`;
   if(!items.length){$('#warehouse-content').innerHTML=`<div class="empty"><div class="empty-icon">📦</div><div>Пока ничего не добавлено. Нажмите «Добавить».</div></div>`;return;}
-  const rows=items.map(it=>`<tr><td>${nameOrDash(it.name)}</td><td>${nameOrDash(it.size)}</td><td><strong>${it.qty}</strong> шт.</td><td>${nameOrDash(it.note)}</td><td class="actions-cell"><button class="btn btn-sm btn-secondary btn-icon" onclick="openEditWarehouseItem('${tab}','${it.id}')" title="Редактировать">✏️</button><button class="btn btn-sm btn-secondary btn-icon" onclick="openDeleteWarehouseItem('${tab}','${it.id}')" title="Удалить">✕</button></td></tr>`).join('');
+  const rows=items.map(it=>`<tr><td data-label="Наименование">${nameOrDash(it.name)}</td><td data-label="Размер">${nameOrDash(it.size)}</td><td data-label="Количество"><strong>${it.qty}</strong> шт.</td><td data-label="Примечание">${nameOrDash(it.note)}</td><td class="actions-cell"><button class="btn btn-sm btn-secondary btn-icon" onclick="openEditWarehouseItem('${tab}','${it.id}')" title="Редактировать">✏️</button><button class="btn btn-sm btn-secondary btn-icon" onclick="openDeleteWarehouseItem('${tab}','${it.id}')" title="Удалить">✕</button></td></tr>`).join('');
   $('#warehouse-content').innerHTML=`<div class="table-wrap"><table><thead><tr><th>Наименование</th><th>Размер</th><th>Количество</th><th>Примечание</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 document.getElementById('warehouse-add-btn').addEventListener('click',()=>window.openAddWarehouseItem());
@@ -660,7 +820,7 @@ function buildXlsx(sheets){
         if(typeof v==='number'&&isFinite(v)){
           sx+=`<c r="${ref}"><v>${v}</v></c>`;
         }else if(v===null||v===undefined||v===''){
-          // пустая ячейка — пропускаем
+          // пустая
         }else{
           sx+=`<c r="${ref}" t="inlineStr"><is><t>${x(v)}</t></is></c>`;
         }
@@ -780,12 +940,12 @@ $('#backup-file').addEventListener('change',e=>{const file=e.target.files[0];if(
   if(d.shoes!==undefined&&!Array.isArray(d.shoes))throw new Error('shoes должен быть массивом');
   if(d.toolIssues!==undefined&&!Array.isArray(d.toolIssues))throw new Error('toolIssues должен быть массивом');
   if(d.warehouse!==undefined&&(typeof d.warehouse!=='object'||Array.isArray(d.warehouse)))throw new Error('warehouse должен быть объектом');
-  if(!confirm(`Восстановить?\nКоронок: ${d.bits.length}\nВыдач коронок: ${d.issues.length}\nРасширителей: ${(d.reamers||[]).length}\nБашмаков: ${(d.shoes||[]).length}\nВыдач прочего: ${(d.toolIssues||[]).length}\nПозиций на складе: ${((d.warehouse?.bits||[]).length)+((d.warehouse?.reamers||[]).length)+((d.warehouse?.shoes||[]).length)}`))return;
+  if(!confirm(`Восстановить?\nКоронок: ${d.bits.length}\nВыдач коронок: ${d.issues.length}\nРасширителей: ${(d.reamers||[]).length}\nБашмаков: ${(d.shoes||[]).length}\nВыдач прочего: ${(d.toolIssues||[]).length}`))return;
   state.data={bits:d.bits,issues:d.issues.map(i=>({decommissioned:false,...i})),reamers:d.reamers||[],shoes:d.shoes||[],toolIssues:(d.toolIssues||[]).map(i=>({decommissioned:false,...i})),warehouse:{bits:(d.warehouse&&Array.isArray(d.warehouse.bits))?d.warehouse.bits:[],reamers:(d.warehouse&&Array.isArray(d.warehouse.reamers))?d.warehouse.reamers:[],shoes:(d.warehouse&&Array.isArray(d.warehouse.shoes))?d.warehouse.shoes:[]}};saveData();toast('Восстановлено');render()}catch(err){toast('Ошибка: '+err.message,'error')}};r.readAsText(file);e.target.value=''});
 $('#clear-all').addEventListener('click',()=>{openModal(`<h3>Удалить все данные?</h3><p style="color:var(--mt);margin-bottom:20px;">Всё удалится безвозвратно.</p><div class="actions"><button class="btn btn-danger" onclick="confirmClearAll()">Удалить всё</button><button class="btn btn-secondary" onclick="closeModal()">Отмена</button></div>`)});
 window.confirmClearAll=async function(){try{const db=await photoDbOpen();const tx=db.transaction(PHOTO_STORE,'readwrite');tx.objectStore(PHOTO_STORE).clear()}catch(e){}photoKeys=new Set();state.data={bits:[],issues:[],reamers:[],shoes:[],toolIssues:[],warehouse:{bits:[],reamers:[],shoes:[]}};saveData();closeModal();toast('Данные удалены');render()};
-function openModal(h){$('#modal-content').innerHTML=h;$('#modal-overlay').classList.add('show')}
-function closeModal(){$('#modal-overlay').classList.remove('show');$('#modal-content').innerHTML=''}
+function openModal(h){$('#modal-content').innerHTML=h;$('#modal-overlay').classList.add('show');document.body.classList.add('modal-open')}
+function closeModal(){$('#modal-overlay').classList.remove('show');$('#modal-content').innerHTML='';document.body.classList.remove('modal-open')}
 window.closeModal=closeModal;
 $('#modal-overlay').addEventListener('click',e=>{if(e.target.id==='modal-overlay')closeModal()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
@@ -813,6 +973,8 @@ function updateClock(){
   const tEl=document.getElementById('clock-time');
   if(dEl)dEl.textContent=d;
   if(tEl)tEl.textContent=t;
+  const mh=document.getElementById('mh-clock');
+  if(mh)mh.textContent=now.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
 }
 updateClock();
 setInterval(updateClock,1000);
