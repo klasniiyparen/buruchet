@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#10251e">
+<title>Мои долги</title>
+<style>
+:root{color-scheme:dark;--bg:#091611;--bg2:#10251e;--text:#f4f8f5;--muted:#a1b4aa;--glass:rgba(255,255,255,.085);--border:rgba(255,255,255,.16);--accent:#83e6b6;--accent2:#299b72;--sheet:rgba(24,48,38,.97);--danger:#ffaaaa}
+:root[data-theme="light"]{color-scheme:light;--bg:#eaf0ec;--bg2:#f7faf8;--text:#17251f;--muted:#687970;--glass:rgba(255,255,255,.63);--border:rgba(255,255,255,.82);--accent:#167c55;--accent2:#299b72;--sheet:rgba(247,250,248,.97);--danger:#b33e3e}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{min-height:100vh;min-height:100dvh;color:var(--text);background:radial-gradient(ellipse at 10% 8%,#174d3b 0%,transparent 42%),radial-gradient(ellipse at 90% 55%,#153b36 0%,transparent 45%),linear-gradient(155deg,var(--bg),var(--bg2) 55%,var(--bg))}
+:root[data-theme="light"] body{background:radial-gradient(ellipse at 10% 8%,#c4e9d6 0%,transparent 42%),radial-gradient(ellipse at 90% 55%,#d3e8df 0%,transparent 45%),linear-gradient(155deg,#eaf0ec,#f7faf8 55%,#e7efea)}
+header{padding:calc(env(safe-area-inset-top) + 18px) 22px 25px;background:var(--glass);border:1px solid var(--border);border-top:0;border-radius:0 0 30px 30px;backdrop-filter:blur(35px) saturate(180%);-webkit-backdrop-filter:blur(35px) saturate(180%);box-shadow:0 15px 45px #0002}
+.topline,.section,.cardtop,.stats,.meta,.actions,.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.topline h1{font-size:26px;letter-spacing:-.7px;margin:5px 0 22px}
+.total{font-size:37px;font-weight:780;letter-spacing:-1.4px;margin:8px 0 16px;overflow-wrap:anywhere}
+small,.muted{color:var(--muted)}
+.stats{font-size:13px;color:var(--muted)}
+main{width:100%;max-width:520px;margin:auto;padding:18px 16px calc(115px + env(safe-area-inset-bottom))}
+.section{margin:20px 0 14px}
+h2{font-size:19px;letter-spacing:-.35px;margin:0}
+button{font:600 14px -apple-system,BlinkMacSystemFont,sans-serif;color:var(--text);background:rgba(255,255,255,.13);border:1px solid var(--border);border-radius:15px;padding:12px 15px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:inset 0 1px 1px #ffffff20;cursor:pointer}
+button:active{transform:scale(.97)}
+button.primary{background:linear-gradient(135deg,#319d70,#217653);color:white;border:0}
+button.add{background:rgba(112,225,173,.19);color:var(--accent);border-color:rgba(112,225,173,.3)}
+button.secondary{background:rgba(255,255,255,.08)}
+button.danger{background:rgba(255,80,80,.13);color:var(--danger)}
+button:disabled{opacity:.45}
+.card{position:relative;overflow:hidden;background:linear-gradient(140deg,var(--glass),rgba(255,255,255,.035));border:1px solid var(--border);border-radius:23px;padding:18px;margin-bottom:13px;backdrop-filter:blur(28px) saturate(160%);-webkit-backdrop-filter:blur(28px) saturate(160%);box-shadow:0 12px 35px #0002,inset 0 1px 1px #ffffff16;animation:appear .3s ease both}
+.card:before{content:"";position:absolute;top:0;left:20%;width:60%;height:1px;background:linear-gradient(90deg,transparent,#ffffff70,transparent)}
+@keyframes appear{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.amount{font-size:28px;font-weight:760;letter-spacing:-.8px;margin:15px 0 3px}
+.progress{height:7px;background:rgba(130,150,140,.2);border-radius:20px;overflow:hidden;margin:15px 0}
+.progress div{height:100%;background:linear-gradient(90deg,#3dba87,#9bf3c5);border-radius:20px;box-shadow:0 0 12px #65e8aa70}
+.meta{font-size:12px;color:var(--muted);flex-wrap:wrap}
+.tag{font-size:11px;padding:6px 10px;border-radius:20px;color:var(--accent);background:rgba(90,220,155,.13);border:1px solid rgba(90,220,155,.2);white-space:nowrap}
+.actions{margin-top:15px;gap:7px;flex-wrap:wrap}
+.actions button{flex:1;padding:10px 6px;font-size:12px;min-width:70px}
+nav{position:fixed;z-index:4;bottom:0;left:12px;right:12px;width:auto;max-width:496px;margin:auto;display:flex;justify-content:space-around;padding:10px 4px calc(10px + env(safe-area-inset-bottom));border:1px solid var(--border);border-radius:25px 25px 0 0;background:var(--sheet);backdrop-filter:blur(35px) saturate(180%);-webkit-backdrop-filter:blur(35px) saturate(180%);box-shadow:0 -8px 35px #0003}
+nav button{background:transparent;border:0;box-shadow:none;color:var(--muted);font-size:11px;line-height:1.6;padding:5px 12px;min-width:65px}
+nav button.active{color:var(--accent)}
+.modal{display:none;position:fixed;inset:0;z-index:10;background:#0008;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);align-items:flex-end;justify-content:center}
+.modal.open{display:flex}
+.sheet{width:100%;max-width:520px;max-height:90dvh;overflow-y:auto;padding:22px 21px calc(24px + env(safe-area-inset-bottom));border:1px solid var(--border);border-radius:28px 28px 0 0;background:var(--sheet);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);box-shadow:0 -15px 60px #0005}
+input,select,textarea{width:100%;padding:14px;margin:7px 0 15px;color:var(--text);background:rgba(130,150,140,.13);border:1px solid var(--border);border-radius:13px;font-size:16px;outline:none}
+select option{background:#183b35;color:white}
+:root[data-theme="light"] select option{background:white;color:#17251f}
+input:focus,select:focus{border-color:var(--accent)}
+label{font-size:13px;font-weight:650;color:var(--muted)}
+.full{width:100%;margin-top:8px}
+.row{padding:11px 0;border-bottom:1px solid var(--border);font-size:14px}
+.empty{text-align:center;padding:35px 10px;color:var(--muted);line-height:1.6}
+.setting{padding:15px 0;border-bottom:1px solid var(--border)}
+.setting p{font-size:13px;color:var(--muted);line-height:1.45;margin:6px 0 12px}
+.pill{font-size:11px;color:var(--muted);border:1px solid var(--border);padding:5px 9px;border-radius:20px}
+.overlay{position:fixed;inset:0;z-index:30;display:none;align-items:center;justify-content:center;padding:25px;background:radial-gradient(ellipse at 20% 20%,#174d3b,#08140f 75%)}
+.overlay.show{display:flex}
+.lockcard{width:100%;max-width:360px;text-align:center;padding:28px 22px;border:1px solid #ffffff30;border-radius:28px;background:#ffffff12;backdrop-filter:blur(30px)}
+.lockcard h2{font-size:24px;margin:12px 0}
+.lockcard p{color:#c1d4ca;font-size:13px;line-height:1.5}
+.toast{position:fixed;z-index:40;left:50%;bottom:105px;transform:translateX(-50%);padding:11px 16px;border-radius:20px;background:#183b35;color:white;box-shadow:0 5px 25px #0004;font-size:13px;display:none;max-width:90%;text-align:center}
+@media(max-width:390px){.amount{font-size:25px}.actions button{font-size:11px}main{padding-left:12px;padding-right:12px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+ <div class="topline"><h1>Мои долги</h1><button aria-label="Настройки" onclick="openSettings()">⚙</button></div>
+ <small>Общий остаток задолженности</small>
+ <div class="total" id="total">0 ₽</div>
+ <div class="stats"><span>Погашено: <b id="paid">0 ₽</b></span><span>Активных долгов: <b id="count">0</b></span></div>
+</header>
+<main>
+ <div class="section"><h2 id="sectionTitle">Активные долги</h2><button class="add" onclick="openDebt()">＋ Добавить</button></div>
+ <div id="debts"></div>
+ <div id="archive" hidden><h2 style="margin:25px 0 12px">Архив погашенных</h2><div id="archived"></div></div>
+</main>
+<nav>
+ <button class="active" onclick="showTab('active',this)">◫<br>Долги</button>
+ <button onclick="showTab('history',this)">▤<br>История</button>
+ <button onclick="showTab('stats',this)">◷<br>Статистика</button>
+ <button onclick="showTab('settings',this)">⚙<br>Настройки</button>
+</nav>
+
+<div class="modal" id="modal"><div class="sheet">
+ <div class="section"><h2 id="modalTitle">Новый долг</h2><button class="secondary" onclick="closeModal('modal')">Закрыть</button></div>
+ <form id="debtForm">
+  <label>Название долга</label><input id="name" required placeholder="Например, кредит">
+  <label>Кому должен</label><input id="creditor" placeholder="Банк или человек">
+  <label>Первоначальная сумма</label><input id="principal" type="number" min="0.01" step="0.01" required>
+  <label>Валюта</label><select id="currency"><option>₽</option><option>€</option><option>$</option><option>₸</option></select>
+  <label>Проценты</label><select id="interest" onchange="toggleRate()"><option value="0">Без процентов</option><option value="monthly">Ежемесячная ставка</option></select>
+  <div id="rateBox" hidden><label>Ставка в месяц (%)</label><input id="rate" type="number" min="0" step="0.01" value="1"></div>
+  <label>Дата возникновения долга</label><input id="startDate" type="date" required>
+  <button class="primary full">Сохранить долг</button>
+ </form>
+</div></div>
+
+<div class="modal" id="paymentModal"><div class="sheet">
+ <div class="section"><h2>Новый платеж</h2><button class="secondary" onclick="closeModal('paymentModal')">Закрыть</button></div>
+ <form id="paymentForm">
+  <label>Сумма платежа</label><input id="payAmount" type="number" min="0.01" step="0.01" required>
+  <label>Дата платежа</label><input id="payDate" type="date" required>
+  <label>Комментарий</label><input id="payNote" placeholder="Ежемесячный платеж">
+  <button class="primary full">Записать платеж</button>
+ </form>
+</div></div>
+
+<div class="modal" id="detailModal"><div class="sheet">
+ <div class="section"><h2 id="detailTitle">История</h2><button class="secondary" onclick="closeModal('detailModal')">Закрыть</button></div>
+ <div id="detailBody"></div>
+</div></div>
+
+<div class="modal" id="settingsModal"><div class="sheet">
+ <div class="section"><h2>Настройки</h2><button class="secondary" onclick="closeModal('settingsModal')">Закрыть</button></div>
+ <div class="setting"><b>Внешний вид</b><p>Выбери оформление приложения.</p>
+  <select id="themeSelect" onchange="setTheme(this.value)"><option value="dark">Тёмный Liquid Glass</option><option value="light">Светлый Liquid Glass</option></select>
+ </div>
+ <div class="setting"><b>Face ID / биометрическая блокировка</b><p id="bioStatus">Защити открытие приложения биометрией устройства. Требуется HTTPS и поддержка WebAuthn в Safari.</p>
+  <button class="primary full" id="bioButton" onclick="setupBiometric()">Настроить биометрию</button>
+  <button class="secondary full" id="bioRemove" onclick="removeBiometric()" hidden>Отключить биометрию</button>
+ </div>
+ <div class="setting"><b>Резервная копия</b><p>Экспортируй долги и историю платежей в JSON-файл. Храни копию отдельно от телефона.</p>
+  <button class="primary full" onclick="exportBackup()">Экспортировать резервную копию</button>
+  <label style="display:block;margin-top:15px">Восстановить из файла</label><input id="importFile" type="file" accept=".json,application/json" onchange="importBackup(event)">
+ </div>
+ <div class="setting"><b>Хранение</b><p>Данные хранятся локально в браузере этого iPhone. Удаление данных Safari или очистка сайта может удалить их. Регулярно создавай резервную копию.</p></div>
+ <button class="danger full" onclick="if(confirm('Удалить все долги и платежи с этого устройства? Сначала сделай резервную копию.')){data={debts:[]};save();closeModal('settingsModal')}">Удалить все данные</button>
+</div></div>
+
+<div class="overlay" id="lockScreen"><div class="lockcard">
+ <div style="font-size:42px">◈</div><h2>Мои долги</h2><p>Подтверди личность, чтобы открыть приложение.</p>
+ <button class="primary full" onclick="unlockBiometric()">Разблокировать с биометрией</button>
+ <button class="secondary full" id="pinFallback" onclick="unlockFallback()" hidden>Продолжить без биометрии</button>
+ <p id="lockMessage"></p>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const KEY='mydebts_v2', PREF='mydebts_preferences';
+let data=loadData(), current=null, editing=null, tab='active';
+let prefs=JSON.parse(localStorage.getItem(PREF)||'{}');
+function loadData(){try{let x=JSON.parse(localStorage.getItem(KEY)||'{"debts":[]}');return Array.isArray(x.debts)?x:{debts:[]}}catch{return {debts:[]}}}
+function save(){localStorage.setItem(KEY,JSON.stringify(data));render()}
+function today(){let d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10)}
+function money(n,c='₽'){return Number(n).toLocaleString('ru-RU',{maximumFractionDigits:2})+' '+c}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function calculate(d,until=today()){
+ let balance=Number(d.principal),interest=0,date=d.startDate;
+ let events=[...(d.payments||[])].filter(p=>p.date<=until).sort((a,b)=>a.date.localeCompare(b.date));
+ function accrue(to){
+  let days=Math.max(0,(new Date(to+'T12:00:00')-new Date(date+'T12:00:00'))/86400000);
+  if(d.interest==='monthly'&&Number(d.rate)>0&&balance>0){let added=balance*(Math.pow(1+Number(d.rate)/100/30,days)-1);balance+=added;interest+=added}
+  date=to;
+ }
+ events.forEach(p=>{accrue(p.date);balance=Math.max(0,balance-Number(p.amount))});
+ accrue(until);
+ return {balance:Math.max(0,balance),interest,paid:(d.payments||[]).reduce((s,p)=>s+Number(p.amount),0)};
+}
+function render(){
+ let active=data.debts.filter(d=>calculate(d).balance>.005), archived=data.debts.filter(d=>calculate(d).balance<=.005);
+ let total=active.reduce((s,d)=>s+calculate(d).balance,0),paid=data.debts.reduce((s,d)=>s+calculate(d).paid,0);
+ document.getElementById('total').textContent=money(total);
+ document.getElementById('paid').textContent=money(paid);
+ document.getElementById('count').textContent=active.length;
+ let title={active:'Активные долги',history:'История платежей',stats:'Статистика',settings:'Настройки'};
+ document.getElementById('sectionTitle').textContent=title[tab];
+ document.getElementById('archive').hidden=tab!=='active'||!archived.length;
+ if(tab==='history'){document.getElementById('debts').innerHTML=allHistory();return}
+ if(tab==='stats'){
+  let interest=data.debts.reduce((s,d)=>s+calculate(d).interest,0);
+  document.getElementById('debts').innerHTML=`<div class="card"><div class="row">Всего долгов <b>${data.debts.length}</b></div><div class="row">Активных <b>${active.length}</b></div><div class="row">Погашено <b>${money(paid)}</b></div><div class="row">Текущий остаток <b>${money(total)}</b></div><div class="row">Начислено процентов (оценка) <b>${money(interest)}</b></div></div>`;return
+ }
+ if(tab==='settings'){document.getElementById('debts').innerHTML='<div class="card">Настройки оформления, биометрии и резервного копирования доступны в разделе ⚙ внизу экрана.</div>';return}
+ document.getElementById('debts').innerHTML=active.length?active.map(d=>card(d)).join(''):'<div class="empty">Пока долгов нет.<br>Добавь первый долг кнопкой выше.</div>';
+ document.getElementById('archived').innerHTML=archived.map(d=>card(d,true)).join('');
+}
+function card(d,archived=false){
+ let c=calculate(d),pct=Math.min(100,100*c.paid/Number(d.principal));
+ return `<div class="card"><div class="cardtop"><b>${esc(d.name)}</b><span class="tag">${archived?'Погашен':'Активный'}</span></div>
+ <div class="amount">${money(c.balance,d.currency)}</div><small>Текущий остаток</small>
+ <div class="progress"><div style="width:${pct}%"></div></div>
+ <div class="meta"><span>Выплачено ${money(c.paid,d.currency)}</span><span>${pct.toFixed(1)}%</span></div>
+ <div class="meta" style="margin-top:8px"><span>${esc(d.creditor||'Без кредитора')}</span><span>${d.interest==='monthly'?d.rate+'% / мес':'Без процентов'}</span></div>
+ <div class="actions"><button class="secondary" onclick="details('${d.id}')">История</button>${!archived?`<button class="primary" onclick="openPayment('${d.id}')">＋ Платеж</button>`:''}<button class="secondary" onclick="editDebt('${d.id}')">Изменить</button></div></div>`;
+}
+function openDebt(){editing=null;document.getElementById('debtForm').reset();document.getElementById('startDate').value=today();document.getElementById('modalTitle').textContent='Новый долг';toggleRate();openModal('modal')}
+function editDebt(id){let d=data.debts.find(x=>x.id===id);editing=id;['name','creditor','principal','currency','interest','rate','startDate'].forEach(k=>document.getElementById(k).value=d[k]??'');document.getElementById('modalTitle').textContent='Изменить долг';toggleRate();openModal('modal')}
+function toggleRate(){document.getElementById('rateBox').hidden=document.getElementById('interest').value!=='monthly'}
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+document.getElementById('debtForm').onsubmit=e=>{
+ e.preventDefault();
+ let d={id:editing||crypto.randomUUID(),name:document.getElementById('name').value,creditor:document.getElementById('creditor').value,principal:Number(document.getElementById('principal').value),currency:document.getElementById('currency').value,interest:document.getElementById('interest').value,rate:Number(document.getElementById('rate').value||0),startDate:document.getElementById('startDate').value,payments:[]};
+ if(editing){d.payments=data.debts.find(x=>x.id===editing).payments;data.debts=data.debts.map(x=>x.id===editing?d:x)}else data.debts.push(d);
+ closeModal('modal');save();notify('Долг сохранён');
+};
+function openPayment(id){current=id;document.getElementById('paymentForm').reset();document.getElementById('payDate').value=today();openModal('paymentModal')}
+document.getElementById('paymentForm').onsubmit=e=>{
+ e.preventDefault();let d=data.debts.find(x=>x.id===current),amount=Number(document.getElementById('payAmount').value);
+ if(!d||amount<=0)return;
+ d.payments.push({id:crypto.randomUUID(),amount,date:document.getElementById('payDate').value,note:document.getElementById('payNote').value});
+ closeModal('paymentModal');save();notify('Платёж записан');
+};
+function details(id){
+ current=id;let d=data.debts.find(x=>x.id===id),c=calculate(d);
+ document.getElementById('detailTitle').textContent=d.name;
+ document.getElementById('detailBody').innerHTML=`<div class="card"><b>Остаток: ${money(c.balance,d.currency)}</b><div class="history">${d.payments.length?d.payments.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(p=>`<div class="row"><div><b>${money(p.amount,d.currency)}</b><br><small>${esc(p.date)} · ${esc(p.note||'Без комментария')}</small></div><div style="display:flex;gap:5px"><button class="secondary" onclick="editPayment('${id}','${p.id}')">Изменить</button><button class="danger" onclick="deletePayment('${id}','${p.id}')">×</button></div></div>`).join(''):'Платежей пока нет'}</div></div>
+ <button class="danger full" onclick="deleteDebt('${id}')">Удалить долг</button>`;
+ openModal('detailModal');
+}
+function editPayment(id,pid){let d=data.debts.find(x=>x.id===id),p=d.payments.find(x=>x.id===pid),a=prompt('Новая сумма платежа',p.amount);if(a===null)return;if(!Number.isFinite(Number(a))||Number(a)<=0)return notify('Некорректная сумма');let dt=prompt('Дата (ГГГГ-ММ-ДД)',p.date);if(dt===null)return;p.amount=Number(a);p.date=dt;save();details(id)}
+function deletePayment(id,pid){if(!confirm('Удалить этот платёж?'))return;let d=data.debts.find(x=>x.id===id);d.payments=d.payments.filter(p=>p.id!==pid);save();details(id)}
+function deleteDebt(id){if(!confirm('Удалить долг вместе с его историей платежей?'))return;data.debts=data.debts.filter(d=>d.id!==id);closeModal('detailModal');save();notify('Долг удалён')}
+function allHistory(){let rows=data.debts.flatMap(d=>d.payments.map(p=>({...p,debt:d.name,currency:d.currency}))).sort((a,b)=>b.date.localeCompare(a.date));return rows.length?`<div class="card">${rows.map(p=>`<div class="row"><div><b>${esc(p.debt)}</b><br><small>${esc(p.date)} · ${esc(p.note||'')}</small></div><b>${money(p.amount,p.currency)}</b></div>`).join('')}</div>`:'<div class="empty">История платежей пока пуста</div>'}
+function showTab(t,el){tab=t;document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));el.classList.add('active');render();if(t==='settings')openSettings()}
+function notify(s){let el=document.getElementById('toast');el.textContent=s;el.style.display='block';setTimeout(()=>el.style.display='none',2200)}
+function setTheme(t){document.documentElement.dataset.theme=t;localStorage.setItem(PREF,JSON.stringify({...prefs,theme:t}));prefs.theme=t;document.querySelector('meta[name="theme-color"]').content=t==='light'?'#eaf0ec':'#10251e'}
+function openSettings(){document.getElementById('themeSelect').value=prefs.theme||'dark';refreshBioUI();openModal('settingsModal')}
+function exportBackup(){
+ let payload={format:'mydebts-backup',version:2,exportedAt:new Date().toISOString(),data};
+ let blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download='moi-dolgi-backup-'+today()+'.json';a.click();URL.revokeObjectURL(url);notify('Резервная копия подготовлена');
+}
+function importBackup(e){
+ let file=e.target.files[0];if(!file)return;let reader=new FileReader();
+ reader.onload=()=>{try{let x=JSON.parse(reader.result),incoming=x.data||x;if(!Array.isArray(incoming.debts))throw Error('bad');if(!confirm('Импорт заменит текущие долги и платежи. Продолжить?'))return;data=incoming;save();notify('Резервная копия восстановлена')}catch{alert('Не удалось прочитать резервную копию. Проверь файл.')}e.target.value=''};
+ reader.readAsText(file);
+}
+
+// WebAuthn: системная биометрия платформы (Face ID/Touch ID/код-пароль).
+// Требует HTTPS и совместимый браузер. Локальный удобный экран блокировки,
+// а не замена серверной защите особо конфиденциальных данных.
+function b64url(buf){return btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
+function fromB64url(s){s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';return Uint8Array.from(atob(s),c=>c.charCodeAt(0))}
+function bioSupported(){return window.isSecureContext&&!!window.PublicKeyCredential&&!!navigator.credentials}
+async function setupBiometric(){
+ if(!bioSupported()){alert('Биометрия доступна в Safari только через HTTPS и на поддерживаемом устройстве.');return}
+ try{
+  let challenge=crypto.getRandomValues(new Uint8Array(32)),uid=crypto.getRandomValues(new Uint8Array(16));
+  let cred=await navigator.credentials.create({publicKey:{challenge,rp:{name:'Мои долги'},user:{id:uid,name:'iphone-user',displayName:'Владелец приложения'},pubKeyCredParams:[{type:'public-key',alg:-7},{type:'public-key',alg:-257}],authenticatorSelection:{authenticatorAttachment:'platform',userVerification:'required',residentKey:'discouraged'},timeout:60000,attestation:'none'}});
+  if(!cred)throw Error('cancelled');
+  prefs.bioId=b64url(cred.rawId);prefs.bioEnabled=true;localStorage.setItem(PREF,JSON.stringify(prefs));refreshBioUI();notify('Биометрическая блокировка настроена');
+ }catch(err){alert('Не удалось настроить биометрию. Проверь настройки Face ID и попробуй ещё раз.')}
+}
+async function unlockBiometric(){
+ try{
+  let id=fromB64url(prefs.bioId),challenge=crypto.getRandomValues(new Uint8Array(32));
+  let assertion=await navigator.credentials.get({publicKey:{challenge,allowCredentials:[{type:'public-key',id}],userVerification:'required',timeout:60000}});
+  if(assertion){document.getElementById('lockScreen').classList.remove('show');sessionStorage.setItem('unlocked','1')}
+ }catch(e){document.getElementById('lockMessage').textContent='Проверка не пройдена. Попробуй ещё раз.'}
+}
+function refreshBioUI(){
+ let on=!!prefs.bioEnabled;
+ document.getElementById('bioButton').hidden=on;
+ document.getElementById('bioRemove').hidden=!on;
+ document.getElementById('bioStatus').textContent=on?'Биометрическая блокировка включена на этом устройстве.':'Включи Face ID, Touch ID или системную биометрию устройства.';
+}
+function removeBiometric(){if(!confirm('Отключить биометрическую блокировку?'))return;delete prefs.bioId;delete prefs.bioEnabled;localStorage.setItem(PREF,JSON.stringify(prefs));refreshBioUI();notify('Биометрия отключена')}
+function unlockFallback(){if(confirm('Продолжить без биометрической проверки?')){document.getElementById('lockScreen').classList.remove('show');sessionStorage.setItem('unlocked','1')}}
+function initLock(){
+ if(prefs.bioEnabled&&prefs.bioId&&sessionStorage.getItem('unlocked')!=='1'){
+  document.getElementById('lockScreen').classList.add('show');
+  document.getElementById('pinFallback').hidden=false;
+ }
+}
+setTheme(prefs.theme||'dark');
+render();
+initLock();
+</script>
+</body>
+</html>
